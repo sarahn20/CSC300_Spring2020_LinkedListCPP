@@ -12,5 +12,7 @@ private:
 public: 
     Node(int payload);
     void setNextNode(Node* n);
+    int getPayload();
+    Node* getNextNode();
 };
 #endif /* Node_hpp */
