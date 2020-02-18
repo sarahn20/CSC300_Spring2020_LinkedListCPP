@@ -9,7 +9,8 @@ class LinkedList
 private: 
     Node* head;
     int count;
-    Node* tail;
+    Node* runToEndOfList();
+    Node* getCurrNode(int index);
 
 public: 
     LinkedList();
@@ -19,6 +20,9 @@ public:
     void addEnd(int payload);
     int getEnd();
     int removeEnd();
+    void addAtIndex(int index, int payload);
+    int getIndex(int index);
+    int removeIndex(int index);
     void display();
 };
 #endif /* LinkedList_hpp */
