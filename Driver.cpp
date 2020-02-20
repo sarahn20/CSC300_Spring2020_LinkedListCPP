@@ -1,17 +1,23 @@
 #include "LinkedList.hpp"
 #include <iostream>
+#include <ctime>
 int main()
 {
-    LinkedList* ll = new LinkedList();
-    ll->addFront(1);
-    ll->addFront(2);
-    ll->addEnd(3);
-    ll->display();
-    //ll->display();
-    //int indy = ll->getIndex(1);
-    //std::cout << indy << "\n";
-    int milo = ll->removeIndex(1);
-    std::cout << milo << "\n";
-    ll->display();
-    delete ll;
+    std::srand(std::time(nullptr));
+
+    LinkedList* mylist = new LinkedList();
+    std::cout<<"Initial List: "<<"\n";
+    mylist->addFront(71);
+    mylist->addEnd(6);
+    mylist->addEnd(3);
+    mylist->addEnd(5);
+    mylist->addEnd(4);
+    mylist->addEnd(2);
+    mylist->addEnd(1);
+    mylist->display();
+    mylist->sort();
+    //std::cout<<"Number of elements: "<< <<"\n";
+    std::cout<<"After sort: "<<"\n";
+    mylist->display();
+    delete mylist;
 }

@@ -58,6 +58,105 @@ void LinkedList::display()
         currNode = currNode->getNextNode();
     }
 }
+
+void LinkedList::displayPointers()
+{
+    Node* currNode = this->head;
+    for(int i = 0; i < this->count; i++)
+    {
+        std::cout << currNode << "\n";
+        currNode = currNode->getNextNode();
+    }
+}
+
+void LinkedList::sort()
+{
+    Node* lastPoint = this->head;
+    Node* currPoint = lastPoint->getNextNode();
+    Node* tempPoint = currPoint->getNextNode();
+    Node* followTheLast = lastPoint;
+    while(isSorted() == false)
+    {
+        for(int j = 0; j<=this->count; j++)
+        {
+            if(this->head->getPayload()>currPoint->getPayload())
+            {
+                currPoint->setNextNode(lastPoint);
+                lastPoint->setNextNode(tempPoint);
+                this->head = currPoint;
+                //resets pointers
+                lastPoint = this->head;
+                currPoint = lastPoint->getNextNode();
+                tempPoint = currPoint->getNextNode();
+            }
+            //The following code will be in a loop
+
+            for(int i = 0; i<=this->count-j; i++)
+            {
+                if(currPoint->getPayload() > tempPoint->getPayload())
+                {
+                    //performs swap
+                    lastPoint->setNextNode(tempPoint);
+                    currPoint->setNextNode(tempPoint->getNextNode());
+                    tempPoint->setNextNode(currPoint);
+            
+                    //resets pointers
+                    lastPoint = followTheLast;
+                    currPoint = lastPoint->getNextNode();
+                    tempPoint = currPoint->getNextNode();
+                }
+                //Progress pointers
+                if(tempPoint->getNextNode()!=0)
+                {
+                    lastPoint = lastPoint->getNextNode();
+                    currPoint = currPoint->getNextNode();
+                    tempPoint = tempPoint->getNextNode();
+                    followTheLast = lastPoint;
+                }   
+            } 
+            lastPoint = this->head;
+            currPoint = lastPoint->getNextNode();
+            tempPoint = currPoint->getNextNode(); 
+        }
+    }
+}
+
+bool LinkedList::isSorted()
+{
+    Node* first = this->head->getNextNode();
+    Node* second = this->head;
+    for(int i = 0; i<this->count-1; i++)
+    {
+       if(first->getPayload()>second->getPayload())
+       {
+           first = first->getNextNode();
+           second = second->getNextNode();
+       }
+       else if (first->getPayload()<second->getPayload())
+       {
+           return false;
+       }
+    }
+    return true;
+}
+
+/*
+void LinkedList::sort()
+{
+    for(int i = 0; i < this->count-1; i++)
+    {
+        if(this->getIndex(i) > this->getIndex(i+1))
+        {
+            this->addAtIndex(i, this->removeIndex(i+1));
+            if(i > 0)
+            {
+                i = i -2;
+            }
+        }
+    }
+}
+*/
+
 void LinkedList::addEnd(int payload)
 {
    if(!this->head)
@@ -111,55 +210,76 @@ int LinkedList::removeEnd()
 
 int LinkedList::getIndex(int index)
 {
-    Node* n = this->head;
-    for(int i = 0; i<this->count; i++)
+    if(index == 0)
     {
-        if(i != index)
-        {
-            n = n->getNextNode();
-        }
-        else
-        {
-            return n->getPayload();
-        }
+        return this->getFront();
     }
-}
+    else if(index == this->count-1)
+    {
+        return this->getEnd();
+    }
+    else
+    {
+        Node* currNode = this->head; //gives us a second pointer to the front of the list
+        for(int i = 0; i < index; i++)
+        {
+            currNode = currNode->getNextNode();
+        }
+        return currNode->getPayload();
 
-Node* LinkedList::getCurrNode(int index)
-{
-    Node* currPointer;
-    Node* n = this->head;
-    for(int i = 0; i < this->count; i++)
-    {
-        if( i != index)
-        {
-            n = n->getNextNode();
-        }
-        else
-        {
-            currPointer = n;
-        }
     }
-    return currPointer;
 }
 
 void LinkedList::addAtIndex(int index, int payload)
 {
-    Node* newNode = new Node(payload);
-    Node* newPointer = newNode;
-    newNode->setNextNode(this->getCurrNode(index));
-    this->getCurrNode(index-1)->setNextNode(newNode); 
-    count++;
+    if(index == 0)
+    {
+        this->addFront(payload);
+    }
+    else if(index == this->count)
+    {
+        this->addEnd(payload);
+    }
+    else
+    {
+        //we are placing somewhere in the middle
+        Node* n = new Node(payload);
+        Node* currNode = this->head;
+        for(int i = 0; i < index-1; i++)
+        {
+            currNode = currNode -> getNextNode();
+        }
+        //currNode points ot the node right before where N should be inserted
+        n->setNextNode(currNode->getNextNode());
+        currNode->setNextNode(n);
+        this->count++;
+    }
 }
 
 int LinkedList::removeIndex(int index)
 {
-    Node* guyToRemove = this->getCurrNode(index);
-    Node* guyBefore = this->getCurrNode(index-1);
-    guyBefore->setNextNode(guyToRemove->getNextNode());
-    guyToRemove->setNextNode(0);
-    int myPayload = guyToRemove->getPayload();
-    delete guyToRemove;
-    this->count--;
-    return myPayload; 
+   if(index == 0)
+   {
+       return this->removeFront();
+   }
+   else if(index == this->count-1)
+   {
+       return this->removeEnd();
+   }
+   else
+   {
+       Node* currNode = this->head;
+       for(int i = 0; i < this->count; i++)
+       {
+           currNode = currNode->getNextNode();
+       }
+       Node* guy2Remove = currNode->getNextNode();
+       currNode->setNextNode(guy2Remove->getNextNode());
+       guy2Remove->setNextNode(0); //sets his next node to null
+       int val2Return = guy2Remove->getPayload();
+       delete guy2Remove; //hasn't erased the memory, just unmarks the memory location
+       this->count--;
+       return val2Return; //return ends the method
+
+   }
 }

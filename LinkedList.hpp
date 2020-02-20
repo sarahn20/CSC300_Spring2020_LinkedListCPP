@@ -10,7 +10,6 @@ private:
     Node* head;
     int count;
     Node* runToEndOfList();
-    Node* getCurrNode(int index);
 
 public: 
     LinkedList();
@@ -24,5 +23,8 @@ public:
     int getIndex(int index);
     int removeIndex(int index);
     void display();
+    void displayPointers();
+    void sort(); //re-arranges the linked list such that it is in ascedning numerical order
+    bool isSorted();
 };
 #endif /* LinkedList_hpp */
